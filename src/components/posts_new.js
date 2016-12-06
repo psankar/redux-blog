@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Field, reduxForm } from 'redux-form';
 
 import { createPost } from '../actions/index';
@@ -25,10 +25,18 @@ const renderTextArea = ({input, meta: { touched, error, warning }}) => (
 
 class PostsNew extends Component {
 
+    static contextTypes = {
+        router: PropTypes.object
+    };
+
+    onSubmit(props) {
+        this.props.createPost(props);
+    }
+
     render() {
         const { handleSubmit, title, categories, content } = this.props;
         return (
-            <form onSubmit={handleSubmit(createPost)}>
+            <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
                 <Field name="title" component={renderInput} label="Title" type="text" {...title} />
                 <Field name="categories" component={renderInput} label="Categories" type="text" {...categories} />
                 <Field name="content" component={renderTextArea} {...content} />
